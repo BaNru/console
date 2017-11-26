@@ -233,7 +233,10 @@ function formatDiff($output)
         }
 
         if (strpos($line, "+") === 0) {
-            $lines[$key] = '<span class="diff-added">' . $line . '</span>';
+            if (preg_match("/.*[[:blank:]]$/is", $lines[$key])) {
+                $lines[$key] = preg_replace("/(.*?)([[:blank:]]+)$/is", '$1<span class="diff-empty">$2</span>', $lines[$key]);
+            }
+            $lines[$key] = '<span class="diff-added">' . $lines[$key] . '</span>';
         }
 
         if (preg_match("%^@@.*?@@%is", $line)) {
@@ -379,6 +382,10 @@ $autocomplete = array(
 
     .diff-deleted {
         color: #a33;
+    }
+    .diff-empty {
+        display: inline-block;
+        background-color: red;
     }
 </style>
 <?php if ($theme == "ubuntu") { ?>
